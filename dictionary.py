@@ -28,7 +28,7 @@ french_to_english = {
 
 # Indian dictionary
 indian_dict = {
-    "Namaste": "A traditional Indian greeting, often meaning 'I bow to the divine in you'.",
+    "Namaste": "A traditional Indian greeting, often meaning 'I bow to the divine '.",
     "Atithi": "A Sanskrit word meaning 'guest', based on the belief that 'the guest is God'.",
     "Satyagraha": "A philosophy of non-violent resistance, famously associated with Mahatma Gandhi.",
     "Guru": "A spiritual teacher or mentor, especially in Indian religions like Hinduism, Buddhism, and Sikhism.",
