@@ -1,6 +1,6 @@
 import tkinter as tk
-from tkinter import messagebox
-import json
+from tkinter import messagebox, StringVar
+from tkinter import Tk, Entry, Button, Label
 
 # French to English dictionary
 french_to_english = {
@@ -49,69 +49,135 @@ indian_dict = {
     "Chai": "A popular Indian beverage made with tea, milk, sugar, and spices like cardamom, cinnamon, and ginger."
 }
 
-# Functions for dictionary actions
-def translate_word():
-    french_word = french_word_entry.get().lower()
-    if french_word in french_to_english:
-        english_word = french_to_english[french_word]
-        result_label.config(text=f"The English translation of '{french_word}' is: {english_word}")
-    else:
-        messagebox.showerror("Error", "Word not found in the dictionary!")
-
-# Function to search the Indian dictionary (case-insensitive)
-def search_word(word):
-    word = word.capitalize()  # Capitalize to match the dictionary keys
-    if word in indian_dict:
-        return indian_dict[word]
-    else:
-        return "Sorry, the word is not found in the dictionary."
-
-# Function to handle language selection
-def change_language(language):
-    global current_language
-    current_language = language
-    if current_language == "French":
-        french_word_label.pack(pady=10)
-        french_word_entry.pack(pady=10)
-        translate_button.pack(pady=10)
-        result_label.pack(pady=10)
-        indian_word_label.pack_forget()
-        indian_word_entry.pack_forget()
-        search_button.pack_forget()
-    elif current_language == "Indian":
-        indian_word_label.pack(pady=10)
-        indian_word_entry.pack(pady=10)
-        search_button.pack(pady=10)
-        result_label.pack(pady=10)
-        french_word_label.pack_forget()
-        french_word_entry.pack_forget()
-        translate_button.pack_forget()
+# Ogoni dictionary
+ogoni_dictionary = {
+    'bari': 'god',
+    'kah-bay': 'hello',
+    'mee keh': 'how are you',
+    'meh-neh': 'fish',
+    'soh-noh': 'cassava',
+    'mii gbaa': 'i am fine',
+    'taataa': 'three',
+    'loo': 'yes',
+    'kpeh neh': 'chicken',
+    'tah eh neh': 'cow',
+    'keh tah bah': 'your welcome',
+    'loo kah bay': 'good morning',
+    'tah keh': 'elder sibling',
+    'soh koh': 'snake',
+    'keh keh tah': 'younger sibling',
+    'koh noh': 'yam',
+    'nay neh': 'four',
+    'keh neh keh': 'whats your name',
+    'keh ngah': 'sweet',
+    'mee mee ree': 'water'
+}
 
 # Create the main window
-root = tk.Tk()
+root = Tk()
 root.title("Language Selector App")
+root.geometry('600x300')
+
+# Result label
+result_label = Label(root, text="", font=("Helvetica", 12))
+result_label.pack(pady=10)
 
 # Language selection menu
-languages = ["French", "Indian"]
-language_var = tk.StringVar()
+languages = ["French", "Indian", "Ogoni"]
+language_var = StringVar()
 language_var.set(languages[0])  # Default language is French
-language_menu = tk.OptionMenu(root, language_var, *languages, command=change_language)
+language_menu = tk.OptionMenu(root, language_var, *languages)
 language_menu.pack(pady=10)
 
 # French to English translation widgets
-french_word_label = tk.Label(root, text="Enter a French word:")
-french_word_entry = tk.Entry(root)
-translate_button = tk.Button(root, text="Translate", command=translate_word)
-result_label = tk.Label(root, text="", font=("Helvetica", 12))
+french_word_label = Label(root, text="Enter a French word:")
+french_word_entry = Entry(root)
+translate_button = Button(root, text="Translate", command=lambda: translate_word("French"))
+french_word_label.pack_forget()
+french_word_entry.pack_forget()
+translate_button.pack_forget()
 
 # Indian Dictionary search widgets
-indian_word_label = tk.Label(root, text="Enter an Indian word (e.g. Namaste):")
-indian_word_entry = tk.Entry(root)
-search_button = tk.Button(root, text="Search", command=lambda: result_label.config(text=search_word(indian_word_entry.get())))
+indian_word_label = Label(root, text="Enter an Indian word (e.g. Namaste):")
+indian_word_entry = Entry(root)
+search_button = Button(root, text="Search", command=lambda: search_word("Indian"))
+indian_word_label.pack_forget()
+indian_word_entry.pack_forget()
+search_button.pack_forget()
 
-# Initial language set to French
-current_language = "French"
-change_language(current_language)
+# Ogoni Dictionary search widgets
+ogoni_word_label = Label(root, text="Enter an Ogoni word (e.g. bari):")
+ogoni_word_entry = Entry(root)
+ogoni_search_button = Button(root, text="Search", command=lambda: search_word("Ogoni"))
+ogoni_word_label.pack_forget()
+ogoni_word_entry.pack_forget()
+ogoni_search_button.pack_forget()
 
-# Run the Tkinter event loop
+# Update the interface based on language selection
+def update_interface():
+    language = language_var.get()
+    
+    # Clear previous results and widgets
+    result_label.config(text="")
+    clear_widgets()
+    
+    # Show relevant widgets based on the selected language
+    if language == "French":
+        french_word_label.pack()
+        french_word_entry.pack()
+        translate_button.pack()
+    elif language == "Indian":
+        indian_word_label.pack()
+        indian_word_entry.pack()
+        search_button.pack()
+    elif language == "Ogoni":
+        ogoni_word_label.pack()
+        ogoni_word_entry.pack()
+        ogoni_search_button.pack()
+
+# Clear widgets before showing relevant ones
+def clear_widgets():
+    french_word_label.pack_forget()
+    french_word_entry.pack_forget()
+    translate_button.pack_forget()
+    
+    indian_word_label.pack_forget()
+    indian_word_entry.pack_forget()
+    search_button.pack_forget()
+    
+    ogoni_word_label.pack_forget()
+    ogoni_word_entry.pack_forget()
+    ogoni_search_button.pack_forget()
+
+# Translate French to English function
+def translate_word(language):
+    if language == "French":
+        french_word = french_word_entry.get().lower()
+        if french_word in french_to_english:
+            result_label.config(text=f"{french_word} in English is {french_to_english[french_word]}")
+        else:
+            result_label.config(text="Word not found in French dictionary.")
+
+# Search Indian Dictionary function
+def search_word(language):
+    if language == "Indian":
+        indian_word = indian_word_entry.get().capitalize()
+        if indian_word in indian_dict:
+            result_label.config(text=f"{indian_word}: {indian_dict[indian_word]}")
+        else:
+            result_label.config(text="Word not found in Indian dictionary.")
+    elif language == "Ogoni":
+        ogoni_word = ogoni_word_entry.get().lower()
+        if ogoni_word in ogoni_dictionary:
+            result_label.config(text=f"{ogoni_word}: {ogoni_dictionary[ogoni_word]}")
+        else:
+            result_label.config(text="Word not found in Ogoni dictionary.")
+
+# Bind the language selection change to update the interface
+language_var.trace("w", lambda *args: update_interface())
+
+# Initial call to set up the interface
+update_interface()
+
+# Run the application
 root.mainloop()
