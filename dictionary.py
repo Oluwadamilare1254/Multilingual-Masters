@@ -88,6 +88,46 @@ spanish_dict = {
     "sol": "sun"
 }
 
+# Yoruba dictionary
+yoruba_dictionary = {
+    'bawoni': 'how are you',
+    'mo wa': 'i am fine',
+    'ore mi': 'my friend',
+    'ile': 'house',
+    'oko': 'farm',
+    'oluwa': 'God',
+    'ase': 'amen',
+    'ojo': 'day',
+    'ori': 'head',
+    'osan': 'moon',
+    'ilu': 'town',
+    'aja': 'dog',
+    'igba': 'time',
+    'omoluabi': 'child of God',
+    'ero': 'visitor',
+    'ekabo': 'thank you',
+    'iya': 'mother',
+    'baba': 'father',
+    'ebon': 'older brother/sister',
+    'aburo': 'younger brother/sister'
+}
+
+def search_word(language, word):
+    dictionaries = {
+        "French": french_to_english,
+        "Indian": indian_dict,
+        "Ogoni": ogoni_dictionary,
+        "Spanish": spanish_dict,
+        "Yoruba": yoruba_dictionary
+    }
+    
+    dictionary = dictionaries.get(language)
+    if dictionary:
+        result = dictionary.get(word.lower(), "Word not found.")
+    else:
+        result = "Language not supported."
+    result_label.config(text=result)
+
 # Create the main window
 root = Tk()
 root.title("Language Selector App")
@@ -98,7 +138,7 @@ result_label = Label(root, text="", font=("Helvetica", 12))
 result_label.pack(pady=10)
 
 # Language selection menu
-languages = ["French", "Indian", "Ogoni", "Spanish"]
+languages = ["French", "Indian", "Ogoni", "Spanish", "Yoruba"]
 language_var = StringVar()
 language_var.set(languages[0])  # Default language is French
 language_menu = tk.OptionMenu(root, language_var, *languages)
@@ -107,7 +147,7 @@ language_menu.pack(pady=10)
 # Entry widgets for each language
 word_label = Label(root, text="")
 word_entry = Entry(root)
-search_button = Button(root, text="", command=lambda: search_word(language_var.get()))
+search_button = Button(root, text="Search", command=lambda: search_word(language_var.get(), word_entry.get()))
 
 # Update the interface based on language selection
 def update_interface():
@@ -120,50 +160,10 @@ def update_interface():
     search_button.pack_forget()
     
     # Show relevant widgets based on the selected language
-    if language == "French":
-        word_label.config(text="Enter a French word:")
-        search_button.config(text="Translate")
-        word_label.pack()
-        word_entry.pack()
-        search_button.pack()
-    elif language == "Indian":
-        word_label.config(text="Enter an Indian word (e.g. Namaste):")
-        search_button.config(text="Search")
-        word_label.pack()
-        word_entry.pack()
-        search_button.pack()
-    elif language == "Ogoni":
-        word_label.config(text="Enter an Ogoni word (e.g. bari):")
-        search_button.config(text="Search")
-        word_label.pack()
-        word_entry.pack()
-        search_button.pack()
-    elif language == "Spanish":
-        word_label.config(text="Enter a Spanish word:")
-        search_button.config(text="Translate")
-        word_label.pack()
-        word_entry.pack()
-        search_button.pack()
-
-# Search word function
-def search_word(language):
-    word = word_entry.get().lower()
-    if language == "French":
-        dictionary = french_to_english
-        result = dictionary.get(word, "Word not found in French dictionary.")
-        result_label.config(text=f"{word} in English is {result}")
-    elif language == "Indian":
-        dictionary = indian_dict
-        result = dictionary.get(word.capitalize(), "Word not found in Indian dictionary.")
-        result_label.config(text=f"{word.capitalize()}: {result}")
-    elif language == "Ogoni":
-        dictionary = ogoni_dictionary
-        result = dictionary.get(word, "Word not found in Ogoni dictionary.")
-        result_label.config(text=f"{word}: {result}")
-    elif language == "Spanish":
-        dictionary = spanish_dict
-        result = dictionary.get(word, "Word not found in Spanish dictionary.")
-        result_label.config(text=f"{word} in English is {result}")
+    word_label.config(text=f"Enter a {language} word:")
+    word_label.pack()
+    word_entry.pack()
+    search_button.pack()
 
 # Bind the language selection change to update the interface
 language_var.trace("w", lambda *args: update_interface())
